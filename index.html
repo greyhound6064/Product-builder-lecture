@@ -1,14 +1,124 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <title>로또 & 힐링 추첨기</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; text-align: center; background-color: #fdfbfb; padding: 40px; }
+        .container { background: white; display: inline-block; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 500px; width: 100%; }
+        
+        /* 위로 문구 스타일 */
+        #message-area { 
+            min-height: 60px; margin-bottom: 20px; padding: 15px;
+            background-color: #fff9db; border-radius: 10px;
+            color: #856404; font-weight: bold; font-size: 1.1em;
+            display: flex; align-items: center; justify-content: center;
+            line-height: 1.4; border: 1px solid #ffeeba;
+        }
+
+        .lotto-row { display: flex; align-items: center; justify-content: center; padding: 10px 0; border-bottom: 1px solid #f1f1f1; }
+        .row-label { font-weight: bold; margin-right: 15px; color: #aaa; width: 20px; font-size: 0.9em; }
+
+        .ball {
+            display: inline-block; width: 38px; height: 38px; line-height: 38px;
+            font-size: 15px; font-weight: bold; color: white; border-radius: 50%;
+            margin: 0 3px;
+        }
+        .plus { font-weight: bold; margin: 0 8px; color: #ccc; }
+
+        button {
+            margin-top: 30px; padding: 15px 40px; font-size: 18px; font-weight: bold;
+            cursor: pointer; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; border-radius: 50px; transition: 0.3s;
+        }
+        button:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3); }
+    </style>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+
+    <div class="container">
+        <div id="message-area">오늘도 고생 많았어요. 당신의 행운을 빌게요! ✨</div>
+        
+        <div id="lotto-board">
+            </div>
+
+        <button onclick="playAndDraw()">행운 추첨하기</button>
+    </div>
+
+    <script>
+        // 1. 위로의 문구 배열 (원하는 문구를 추가해보세요!)
+        const messages = [
+            "당신의 노력이 헛되지 않음을 믿어요. 꼭 보답받을 거예요.",
+            "로또 1등보다 더 소중한 당신, 오늘 하루도 수고했어요.",
+            "행운은 예상치 못한 순간에 찾아온답니다. 조금만 기다려봐요.",
+            "지금 충분히 잘하고 있어요. 스스로를 조금 더 믿어줘요.",
+            "오늘의 결과가 어떻든, 당신의 내일은 오늘보다 밝을 거예요.",
+            "가장 큰 행운은 당신이 무사히 오늘을 보낸 것이 아닐까요?",
+            "꽃이 피는 시기는 저마다 달라요. 당신의 계절은 곧 올 거예요.",
+            "잠시 쉬어가도 괜찮아요. 숨을 크게 들이마셔 보세요."
+        ];
+
+        const sound = new Audio('https://t1.daumcdn.net/tistory_admin/static/manage/playlist_add_v1.mp3');
+
+        function playAndDraw() {
+            // 소리 재생
+            sound.currentTime = 0;
+            sound.play().catch(e => {});
+
+            // 2. 랜덤 문구 표시
+            const randomIdx = Math.floor(Math.random() * messages.length);
+            document.getElementById('message-area').innerText = messages[randomIdx];
+
+            // 3. 로또 5줄 생성
+            drawFiveLines();
+        }
+
+        function drawFiveLines() {
+            const board = document.getElementById('lotto-board');
+            board.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D', 'E'];
+
+            for (let i = 0; i < 5; i++) {
+                let numbers = [];
+                while (numbers.length < 7) {
+                    let num = Math.floor(Math.random() * 45) + 1;
+                    if (!numbers.includes(num)) numbers.push(num);
+                }
+                let bonus = numbers.pop();
+                numbers.sort((a, b) => a - b);
+
+                const row = document.createElement('div');
+                row.className = 'lotto-row';
+                
+                const label = document.createElement('span');
+                label.className = 'row-label';
+                label.innerText = labels[i];
+                row.appendChild(label);
+
+                numbers.forEach(num => row.appendChild(createBall(num)));
+                
+                const plus = document.createElement('span');
+                plus.className = 'plus';
+                plus.innerText = '+';
+                row.appendChild(plus);
+
+                row.appendChild(createBall(bonus, true));
+                board.appendChild(row);
+            }
+        }
+
+        function createBall(num, isBonus = false) {
+            const ball = document.createElement('span');
+            ball.className = 'ball';
+            ball.innerText = num;
+            if (num <= 10) ball.style.backgroundColor = '#f1c40f';
+            else if (num <= 20) ball.style.backgroundColor = '#3498db';
+            else if (num <= 30) ball.style.backgroundColor = '#e74c3c';
+            else if (num <= 40) ball.style.backgroundColor = '#95a5a6';
+            else ball.style.backgroundColor = '#2ecc71';
+            if (isBonus) ball.style.boxShadow = "0 0 0 3px #333 inset";
+            return ball;
+        }
+    </script>
 </body>
 </html>
