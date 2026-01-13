@@ -1,0 +1,306 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f4f7f6;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+#lifeContainer {
+    position: relative;
+    margin-bottom: 30px;
+    height: 40px; /* Reserve space for life display */
+}
+
+#lifeDisplay {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #007bff;
+    display: none; /* Initially hidden */
+}
+
+.floating-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    font-weight: bold;
+    pointer-events: none;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    opacity: 1;
+    z-index: 10;
+}
+
+.plus {
+    color: #28a745; /* Green */
+    animation-name: float-up;
+}
+
+.minus {
+    color: #dc3545; /* Red */
+    animation-name: fall-down;
+}
+
+@keyframes float-up {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -150%) scale(1.5);
+    }
+}
+
+@keyframes fall-down {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, 100%) rotate(15deg);
+    }
+}
+
+
+.button-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+button.start-game {
+    background-color: #007bff;
+    color: white;
+}
+button.start-game:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+button.comfort {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button.comfort:hover:not(:disabled) {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+button.insult {
+    background-color: #f44336;
+    color: white;
+}
+
+button.insult:hover:not(:disabled) {
+    background-color: #da190b;
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#messageDisplay {
+    min-height: 100px;
+    width: 90%;
+    max-width: 600px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #555;
+    transition: color 0.5s ease;
+    margin-bottom: 20px;
+}
+
+#messageDisplay.comfort-message {
+    color: #28a745;
+}
+
+#messageDisplay.insult-message {
+    color: #dc3545;
+}
+
+#messageDisplay.win-message {
+    color: #28a745;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#messageDisplay.lose-message {
+    color: #dc3545;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#gameExplanation {
+    margin-top: 20px;
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* Comment Section Styles */
+#commentSection {
+    width: 90%;
+    max-width: 600px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+#commentSection h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.comment-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.comment-form input[type="text"],
+.comment-form input[type="password"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    min-width: 0; /* Fix flex issue */
+}
+
+.comment-form button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #333;
+    color: white;
+    margin: 0; /* Reset generic button margin */
+}
+
+.comment-form button:hover {
+    background-color: #555;
+}
+
+#commentList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.comment-item {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.comment-item:last-child {
+    margin-bottom: 0;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85em;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: #555;
+    margin-right: auto; /* Push date/delete to the right */
+}
+
+.comment-date {
+    margin-right: 10px;
+}
+
+.delete-comment-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 0;
+    box-shadow: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.delete-comment-btn:hover {
+    opacity: 1;
+    text-decoration: underline;
+    background: none;
+    transform: none;
+}
+
+.comment-text {
+    font-size: 1em;
+    color: #333;
+    word-break: break-all;
+}
+
+.empty-message {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+    font-style: italic;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,28 +1,31 @@
-# Music Genre Recommendation Service
+# Carrot and Stick Game
 
 ## Overview
-This is a web application that recommends a random music genre to the user. It features a dark mode UI, a glassmorphism-style card to display the recommendation, and is fully responsive.
+This is a web application game where the user gains or loses "LIFE" points by receiving "comfort" (Carrot) or "insults" (Stick). It's a simple, interactive game designed to simulate the ups and downs of motivation.
 
 ## Design and Features
 
 ### Style and Design
-*   **Theme:** Dark mode with a deep, immersive feel.
-*   **Layout:** A centrally-located button to trigger the recommendation.
-*   **Card UI:** A semi-transparent "glassmorphism" card that appears with a smooth animation to display the genre information. It includes a relevant image for each genre.
-*   **Typography:** Clean, modern fonts for readability.
-*   **Responsiveness:** The layout adapts gracefully to both mobile and desktop screens.
+*   **Theme:** Clean, modern interface with a focus on typography and clear feedback.
+*   **Colors:** Uses distinctive colors for actions (Green for Comfort, Red for Insult/Stick).
+*   **Animation:** Features floating text animations for score changes (+1, -1).
+*   **Responsiveness:** Fully responsive layout suitable for mobile and desktop.
 
 ### Features
-*   **Random Genre Recommendation:** Clicking the "Recommend Today's Music Genre" button selects a random genre from a predefined list.
-*   **Detailed Information:** The recommendation card displays the genre's name, a representative image, a brief description, a prominent artist, and a classic song.
+*   **Life System:** Starts with 10 LIFE. Game Over at 0, Win at >20.
+*   **Interaction:**
+    *   **Comfort Button:** Decreases LIFE by 1, shows a comforting message.
+    *   **Insult Button:** Increases LIFE by 1, shows an insulting (motivating) message.
+*   **Comment System:** Users can leave comments which are stored locally.
+    *   **Deletion:** Users can delete their own comments using a password set during creation.
 
-## Current Task: Add Images and More Genres
+## Current Task: Enhance Comment Deletion with Password
 
-*   **Objective:** Enhance the user experience by adding more genres and displaying a unique image for each recommendation.
+*   **Objective:** Secure the comment deletion feature so that only the author (or someone with the password) can delete a comment.
 *   **Steps:**
-    1.  **HTML (`index.html`):** Add an `<img>` element to the card structure to hold the genre image.
-    2.  **CSS (`style.css`):** Style the new image element to ensure it is responsive and visually integrated into the card design.
-    3.  **JavaScript (`main.js`):**
-        *   Expand the `genreData` array with more genres.
-        *   Add an `imageUrl` property to each genre object.
-        *   Update the recommendation logic to set the image source dynamically.
+    1.  **HTML (`index.html`):** Add a password input field to the comment submission form.
+    2.  **CSS (`style.css`):** Style the password input to fit the existing form layout.
+    3.  **JavaScript (`main.js`):** 
+        *   Update `saveComment` to store the password.
+        *   Update `deleteComment` to prompt the user for a password and verify it before deleting.
+        *   Handle backward compatibility for comments without passwords (allow deletion or require a default).

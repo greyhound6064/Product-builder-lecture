@@ -1,0 +1,273 @@
+// 당근과 채찍 게임 Logic
+
+const comfortMessages = [
+    "힘들었죠? 혼자 감당하지 않아도 괜찮아요.", "당신은 충분히 잘하고 있어요. 스스로를 믿어주세요.", "잠시 쉬어가도 괜찮아요. 모든 것은 지나갈 거예요.",
+    "당신은 소중하고 사랑받을 자격이 충분합니다.", "지금 이 순간에도 당신은 빛나고 있어요.", "어떤 선택을 하든 당신의 결정을 응원합니다.",
+    "넘어져도 괜찮아요. 다시 일어설 힘이 당신에게는 있어요.", "당신의 진심은 언제나 통할 거예요.", "오늘 하루도 정말 수고 많으셨습니다.",
+    "당신은 생각보다 훨씬 더 강한 사람이에요.",
+    "세상이 등을 돌려도, 나는 언제나 당신 편이에요.", "지금 겪는 어려움은 당신을 더 크게 성장시킬 거예요.", "당신의 존재만으로도 누군가에겐 큰 힘이 됩니다.",
+    "결과가 어떻든, 당신의 노력은 결코 헛되지 않았어요.", "가장 어두운 밤도 결국엔 아침을 맞이해요.", "스스로를 너무 다그치지 마세요. 이미 충분해요.",
+    "당신의 따뜻한 마음씨는 분명 빛을 발할 거예요.", "오늘은 아무 생각 말고 푹 쉬어요.", "괜찮아, 괜찮아, 다 괜찮아질 거예요.",
+    "당신은 세상에서 가장 소중한 보물입니다."
+];
+
+const insultMessages = [
+    "네 재능은 숨기는데 탁월하구나.", "생각하는 게 그렇게 힘들면 안 해도 돼.", "넌 평범함의 극치를 달리는구나.", "그 정도 노력으로 뭘 바라니?",
+    "네 존재 자체가 민폐다.", "그 얼굴로 거울 볼 맛 나겠네.", "머리는 장식으로 달고 다니니?", "네가 하는 모든 말은 쓸데없다.",
+    "딱히 할 말은 없지만, 할 말이 없게 만드는 재주가 있네.", "왜 사는지 모르겠다.",
+    "너 같은 건 노력해도 안 돼. 그냥 포기해.", "네가 숨 쉬는 것만으로도 산소가 아깝다.", "어떻게 그렇게까지 멍청할 수가 있지? 뇌는 장식품인가?",
+    "네 인생은 실패작이야. 다시 태어나는 게 빠를 듯.", "사회에 아무런 도움이 안 되는 기생충 같은 존재.", "그 얼굴로 밖에 돌아다닐 용기가 가상하다.",
+    "네가 하는 모든 선택은 최악으로 귀결되지.", "존재 자체가 주변 사람들에게는 재앙이다.", "차라리 없는 게 나았을 텐데.",
+    "네 생각, 네 의견, 전부 다 쓰레기야."
+];
+
+let life = 0;
+let gameActive = false;
+
+// DOM Elements
+const startGameButton = document.getElementById('startGameButton');
+const comfortButton = document.getElementById('comfortButton');
+const insultButton = document.getElementById('insultButton');
+const messageDisplay = document.getElementById('messageDisplay');
+const lifeContainer = document.getElementById('lifeContainer');
+const lifeDisplay = document.getElementById('lifeDisplay');
+const lifeValueSpan = document.getElementById('lifeValue');
+
+// Game Functions
+function getRandomMessage(messages) {
+    return messages[Math.floor(Math.random() * messages.length)];
+}
+
+function showFloatingText(text, type) {
+    const floatingText = document.createElement('span');
+    floatingText.textContent = text;
+    floatingText.className = `floating-text ${type}`;
+    lifeContainer.appendChild(floatingText);
+
+    setTimeout(() => {
+        floatingText.remove();
+    }, 1000); // Remove after animation ends (1s)
+}
+
+function updateGameStatus() {
+    lifeValueSpan.textContent = life;
+    messageDisplay.className = ''; // Reset classes
+    messageDisplay.id = 'messageDisplay'; // Ensure ID is set
+
+    // 게임 승리 조건: LIFE가 20점 초과하면 성공!
+    if (life > 20) {
+        messageDisplay.textContent = "축하합니다! 많은 모욕을 견뎌내며 당신은 더욱 단단해졌습니다.";
+        messageDisplay.classList.add('win-message');
+        endGame();
+    }
+    // 게임 패배 조건: LIFE가 0점 이하가 되면 사망!
+    else if (life <= 0) {
+        messageDisplay.textContent = "당신은 나약해 빠졌습니다. 모욕받기로 스스로를 더 단련하십시오.";
+        messageDisplay.classList.add('lose-message');
+        endGame();
+    }
+}
+
+function startGame() {
+    life = 10;
+    gameActive = true;
+    lifeDisplay.style.display = 'block';
+    startGameButton.style.display = 'none';
+    comfortButton.disabled = false;
+    insultButton.disabled = false;
+    messageDisplay.textContent = "시작! 위로받거나 모욕받으세요.";
+    messageDisplay.className = '';
+    updateGameStatus();
+}
+
+function endGame() {
+    gameActive = false;
+    comfortButton.disabled = true;
+    insultButton.disabled = true;
+    startGameButton.textContent = "다시 시작";
+    startGameButton.style.display = 'block';
+}
+
+// Event Listeners for Game
+if (startGameButton) startGameButton.addEventListener('click', startGame);
+
+if (comfortButton) comfortButton.addEventListener('click', () => {
+    if (gameActive) {
+        life--;
+        showFloatingText('-1', 'minus');
+        messageDisplay.textContent = getRandomMessage(comfortMessages);
+        messageDisplay.className = 'comfort-message';
+        updateGameStatus();
+    }
+});
+
+if (insultButton) insultButton.addEventListener('click', () => {
+    if (gameActive) {
+        life++;
+        showFloatingText('+1', 'plus');
+        messageDisplay.textContent = getRandomMessage(insultMessages);
+        messageDisplay.className = 'insult-message';
+        updateGameStatus();
+    }
+});
+
+
+// ---------------------------------------------------------
+// Comment System Logic (LocalStorage)
+// ---------------------------------------------------------
+
+const commentForm = document.getElementById('commentForm');
+const commentInput = document.getElementById('commentInput');
+const authorInput = document.getElementById('authorInput');
+const passwordInput = document.getElementById('passwordInput');
+const commentList = document.getElementById('commentList');
+const STORAGE_KEY = 'carrot_stick_comments';
+
+// Load comments on startup
+document.addEventListener('DOMContentLoaded', () => {
+    loadComments();
+    
+    // Check initial game state
+    if (!gameActive) {
+        if(lifeDisplay) lifeDisplay.style.display = 'none';
+        if(comfortButton) comfortButton.disabled = true;
+        if(insultButton) insultButton.disabled = true;
+    }
+});
+
+function loadComments() {
+    const comments = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    renderComments(comments);
+}
+
+function saveComment(author, text, password) {
+    const comments = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    const newComment = {
+        id: Date.now(),
+        author: author || '익명', // Anonymous if empty
+        text: text,
+        password: password,
+        date: new Date().toLocaleString()
+    };
+    
+    comments.unshift(newComment); // Add to top
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
+    renderComments(comments);
+}
+
+function renderComments(comments) {
+    if (!commentList) return;
+    commentList.innerHTML = '';
+    
+    if (comments.length === 0) {
+        const emptyMsg = document.createElement('li');
+        emptyMsg.className = 'empty-message';
+        emptyMsg.textContent = '첫 번째 댓글을 남겨보세요!';
+        commentList.appendChild(emptyMsg);
+        return;
+    }
+
+    comments.forEach(comment => {
+        const li = document.createElement('li');
+        li.className = 'comment-item';
+        
+        const header = document.createElement('div');
+        header.className = 'comment-header';
+        
+        const authorSpan = document.createElement('span');
+        authorSpan.className = 'comment-author';
+        authorSpan.textContent = comment.author;
+        
+        const metaDiv = document.createElement('div');
+        
+        const dateSpan = document.createElement('span');
+        dateSpan.className = 'comment-date';
+        dateSpan.textContent = comment.date;
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-comment-btn';
+        deleteBtn.textContent = '삭제';
+        deleteBtn.ariaLabel = '삭제';
+        
+        // Direct event listener attachment
+        deleteBtn.addEventListener('click', () => {
+            deleteComment(comment.id);
+        });
+
+        metaDiv.appendChild(dateSpan);
+        metaDiv.appendChild(deleteBtn);
+        
+        header.appendChild(authorSpan);
+        header.appendChild(metaDiv);
+        
+        const textDiv = document.createElement('div');
+        textDiv.className = 'comment-text';
+        textDiv.textContent = comment.text;
+        
+        li.appendChild(header);
+        li.appendChild(textDiv);
+        
+        commentList.appendChild(li);
+    });
+}
+
+function deleteComment(id) {
+    let comments = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    const targetComment = comments.find(c => c.id === id);
+    
+    if (!targetComment) {
+        alert('이미 삭제되었거나 존재하지 않는 댓글입니다.');
+        renderComments(comments); 
+        return;
+    }
+
+    if (targetComment.password) {
+        // Use a slight delay to ensure the UI is responsive before blocking with prompt
+        setTimeout(() => {
+            const inputPw = prompt('비밀번호를 입력하세요:');
+            if (inputPw === null) return; 
+            
+            if (inputPw !== targetComment.password) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+            performDelete(id);
+        }, 10);
+    } else {
+         if (confirm('정말 삭제하시겠습니까?')) {
+             performDelete(id);
+         }
+    }
+}
+
+function performDelete(id) {
+    let comments = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    comments = comments.filter(comment => comment.id !== id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
+    renderComments(comments);
+}
+
+// Helper to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+if (commentForm) {
+    commentForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = commentInput.value.trim();
+        const author = authorInput.value.trim();
+        const password = passwordInput.value.trim();
+        
+        if (text && password) {
+            saveComment(author, text, password);
+            commentInput.value = ''; 
+            passwordInput.value = '';
+            // Keep author name for convenience
+        } else if (!password) {
+            alert('비밀번호를 입력해주세요.');
+        }
+    });
+}
